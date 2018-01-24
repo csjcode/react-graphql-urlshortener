@@ -7,9 +7,10 @@ import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import apiuri from './private/graphcoolkey.js';
 
 const client = new ApolloClient({
-   link: new HttpLink('https://api.graph.cool/simple/v1/cjctk99sg0m3z01505c8ja43v'),
+   link: new HttpLink({uri:apiuri}),
    cache: new InMemoryCache(),
 });
 
