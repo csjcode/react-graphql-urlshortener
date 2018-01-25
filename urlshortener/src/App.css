@@ -2,6 +2,22 @@
   text-align: center;
 }
 
+.App--link-content-container{
+  margin: 0 auto;
+  padding: 50px;
+  width: 100%;
+}
+
+.App--link-content{
+  margin: 0 auto;
+  /* padding: 50px; */
+  width: 50%;
+}
+
+.App--link-list-links{
+  margin-top:20px;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
