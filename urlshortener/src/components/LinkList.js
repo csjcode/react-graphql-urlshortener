@@ -61,8 +61,8 @@ class LinkList extends Component {
         }
 
         return (
-            <div>
-                {allLinks.map(link => <Link key={link.id} link={link} />)}
+            <div className="LinkList--container">
+                {allLinks.map(link => <Link key={link.id} link={link} className="LinkList--link"/>)}
             </div>
         );
     }

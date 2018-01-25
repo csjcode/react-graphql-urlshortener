@@ -912,6 +912,138 @@ name: 'createShortLinkMutation',
 
 ---------------------------------------------------------------------------
 
+### Serverless Functions on GraphCool
+
+---------------------------------------------------------------------------
+
+1. Functions need to be defined in the Graphcool service definition file (graphcool.yml).
+
+2. Function types supported include operationBefore/operationAfter, Subscriptions, Resolvers
+
+3. Move the hash function to subscription
+
+4. Create `graphcool/src` folder
+
+5. Create  `graphcool/src/createShortLink.graphql` with:
+```javascript
+subscription {
+  Link(filter: { mutation_in: [CREATED] }) {
+    node {
+      id
+    }
+  }
+}
+```
+
+6. Create `createShortLink.js` with:
+
+```javascript
+const { fromEvent } = require('graphcool-lib');
+
+const createHash = itemCount => {
+    let hashDigits = [];
+    // dividend is a unique integer (in our case, number of links)
+    let dividend = itemCount + 1;
+    let remainder = 0;
+    while (dividend > 0) {
+        remainder = dividend % 62;
+        dividend = Math.floor(dividend / 62);
+        hashDigits.unshift(remainder);
+    }
+    const alphabetArray = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`.split(
+        '',
+    );
+    // Convert hashDigits to base62 representation
+    let hashString = '';
+    let i = 0;
+    while (hashDigits.length > i) {
+        hashString += alphabetArray[hashDigits[i]];
+        i++;
+    }
+    return hashString;
+};
+
+module.exports = async event => {
+    // Get the data from the event - the data
+    // is determined by the subscription. In our case, it will look like this:
+    // event = {
+    //     "data": {
+    //         "Link": {
+    //             "node": {
+    //                 "id": "LINK_ID"
+    //             }
+    //         }
+    //     }
+    // }
+    const { id } = event.data.Link.node;
+
+    const graphcool = fromEvent(event);
+    const api = graphcool.api('simple/v1');
+
+    // 1. Get the link count.
+    const getLinkCountQuery = `
+        query GetLinkCountQuery {
+            links: _allLinksMeta {
+                count
+            }
+        }`;
+
+    const linkCountQueryResult = await api.request(getLinkCountQuery);
+    const linkCount = linkCountQueryResult.links.count;
+
+    // 2. Get the hash.
+    const hash = createHash(linkCount);
+
+    // 3. Update the link with a hash.
+    const updateLinkMutation = `
+        mutation ($id: ID!, $hash: String!) {
+            updateLink(id: $id, hash: $hash) {
+                id  
+            } 
+        }`;
+
+    const variables = { id, hash };
+    await api.request(updateLinkMutation, variables);
+
+    return {
+        data: {
+            success: true,
+        },
+    };
+};
+```
+
+7. where package.json fiile is in graphcool subfolder: `npm install graphcool-lib --save`
+
+8. Update the `graphcool.yml` file:
+```javascript
+ functions:
+  createShortLink:
+    type: subscription
+    query: src/createShortLink.graphql
+    handler:
+      code: src/createShortLink.js
+```
+
+9. `graphcool deploy`
+
+result: Code storage limit exceeded [I looked at Graphcool's status page and this is a known issue as of 1/22 on eu-west for functions]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### notes:

@@ -5,7 +5,7 @@ class Link extends Component {
     render() {
         return (
             <div>
-                <div>
+                <div className="Link--container">
                     {this.props.link.description} ({this.props.link.url} -{' '}
                     {this.props.link.hash})
                 </div>

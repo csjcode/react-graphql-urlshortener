@@ -19,13 +19,19 @@ types: ./types.graphql
 permissions:
   - operation: "*"
 
-functions:
-  hello:
-    handler:
-      code: src/hello.js
-    type: resolver
-    schema: src/hello.graphql
+# functions:
+#   hello:
+#     handler:
+#       code: src/hello.js
+#     type: resolver
+#     schema: src/hello.graphql
 
+functions:
+  createShortLink:
+    type: subscription
+    query: src/createShortLink.graphql
+    handler:
+      code: src/createShortLink.js
 
 # Model/Relation permissions are used to limit the API access
 # To take the burden of thinking about those while development, we
