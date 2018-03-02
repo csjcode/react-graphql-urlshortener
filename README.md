@@ -1,6 +1,8 @@
-# API.cc Url Shortener in React and GraphQL
+# Url Shortener in React and GraphQL
 
 * URL shortener using React. Graphql, Node.js
+* credit original author of this code: Peter Jausovec - I am just working through his article on Hacker Noon, adding notes for those who may find it useful and educational. Most of the code was originally in the Hacker Noon article although there were some modifications needed for my system to work. 
+* I am plannign to use some variant of this on API.cc - I did hit a roadblock with the serverless deployment, I'm looking into now. Apparently Graphcool had some network issues at the time I was deploying.
 * repo: react-graphql-urlshortener - public examples
 * I'm starting out planning and architecture with a combo of info derived (especially initial sections) from a useful Hacker Noon Graphql article (Building URL shortener using React, Apollo and GraphQL by Peter Jausovec), kind of a fork actually,  and docs from GraphQL and Graphcool as well as Graphcool signup info.
 * I am refactoring some of this as I go along, however, intially following the original article and docs just to get things working first.
